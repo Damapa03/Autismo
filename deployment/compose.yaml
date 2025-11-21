@@ -10,7 +10,7 @@ services:
     volumes:
       - ollama_models:/root/.ollama
     networks:
-      - ai-solver
+      - autism
     ports:
       - "11434:11434"
 
@@ -24,22 +24,10 @@ services:
     volumes:
       - openwebui_data:/app/backend/data
     networks:
-      - ai-solver
+      - autism
     ports:
       - "3000:8080"
     restart: unless-stopped
-
-  ai-solver:
-    build:
-      context: ../
-      dockerfile: .devcontainer/Dockerfile
-    volumes:
-      - ../:/workspaces/ai-solver
-    networks:
-      ai-solver:
-        aliases:
-          - devcontainer
-          - debug-ai-solver
 
 volumes:
   ollama_models:
@@ -47,6 +35,6 @@ volumes:
   mongodb_data:
 
 networks:
-  ai-solver:
-    name: ai-solver
+  autism:
+    name: autism
     driver: bridge
