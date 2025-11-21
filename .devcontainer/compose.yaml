@@ -17,36 +17,16 @@ services:
   openwebui:
     image: ghcr.io/open-webui/open-webui:main
     # Disable for Mac users with GPU usage
-    # depends_on: [ollama]
+    depends_on: [ollama]
     environment:
-      # - OLLAMA_BASE_URL=http://ollama:11434
-      - OLLAMA_BASE_URL=http://host.docker.internal:11434 # For Mac users with GPU usage
+      - OLLAMA_BASE_URL=http://ollama:11434
+      # - OLLAMA_BASE_URL=http://host.docker.internal:11434 # For Mac users with GPU usage
     volumes:
       - openwebui_data:/app/backend/data
     networks:
       - ai-solver
     ports:
       - "3000:8080"
-    restart: unless-stopped
-
-  mcpo-weather:
-    image: ghcr.io/open-webui/mcpo:main
-    command:
-      - --port
-      - "8001"
-      - --api-key
-      - ${MCPO_API_KEY:-weather-secret}
-      - --config
-      - /config/mcpo-weather.json
-      - --hot-reload
-    environment:
-      MCPO_API_KEY: ${MCPO_API_KEY:-weather-secret}
-    volumes:
-      - ./mcpo-weather.json:/config/mcpo-weather.json:ro
-    networks:
-      - ai-solver
-    ports:
-      - "8009:8001"
     restart: unless-stopped
 
   ai-solver:
@@ -60,19 +40,6 @@ services:
         aliases:
           - devcontainer
           - debug-ai-solver
-
-  mongodb:
-    image: mongo:8.0
-    env_file:
-      - .mongodb.env
-    volumes:
-      - mongodb_data:/data/db
-    profiles:
-      - tests
-    networks:
-      - ai-solver
-    ports:
-      - 27018:27017
 
 volumes:
   ollama_models:
